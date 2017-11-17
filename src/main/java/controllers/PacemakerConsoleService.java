@@ -3,6 +3,7 @@ package controllers;
 import asg.cliche.Command;
 import asg.cliche.Param;
 import com.google.common.base.Optional;
+import models.Activity;
 import models.User;
 import parsers.AsciiTableParser;
 import parsers.Parser;
@@ -73,22 +74,42 @@ public class PacemakerConsoleService {
 
     // Baseline Commands
 
+    // Lab 8 Exercise 1 16/11/17 Todo write test
     @Command(description = "Add location: Append location to an activity")
     public void addLocation(@Param(name = "activity-id") String id,
                             @Param(name = "longitude") double longitude,
                             @Param(name = "latitude") double latitude) {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(id));
+        if (user.isPresent() && activity.isPresent()) {
+            paceApi.addLocation(activity.get().id, longitude, latitude);
+            console.println("ok");
+        } else {
+            console.println("No active User logged in");
+        }
     }
 
+    // Lab 8 Exercise 3 16/11/17
     @Command(description = "ActivityReport: List all activities for logged in user, sorted alphabetically by type")
     public void activityReport() {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            //Collection<Activity> activities = paceApi.getActivities(user.get().id);
+        }
     }
 
     @Command(description = "Activity Report: List all activities for logged in user by type. Sorted longest to shortest distance")
     public void activityReport(@Param(name = "byType: type") String sortBy) {
     }
 
+    // Lab 8 Exercise 2 16/11/17 ToDo write test
     @Command(description = "List all locations for a specific activity")
     public void listActivityLocations(@Param(name = "activity-id") String id) {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(id));
+        if (user.isPresent() && activity.isPresent()) {
+            console.renderLocations(activity.get().route);
+        }
     }
 
     @Command(description = "Follow Friend: Follow a specific friend")
