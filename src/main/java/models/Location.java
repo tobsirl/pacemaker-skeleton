@@ -3,7 +3,6 @@ package models;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -29,7 +28,6 @@ public class Location implements Serializable {
     }
 
     public Location(double latitude, double longitude) {
-        this.id = UUID.randomUUID().toString();
         this.latitude = latitude;
         this.longitude = longitude;
     }

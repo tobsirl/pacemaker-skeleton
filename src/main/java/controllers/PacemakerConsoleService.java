@@ -8,9 +8,14 @@ import models.User;
 import parsers.AsciiTableParser;
 import parsers.Parser;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class PacemakerConsoleService {
 
-    private PacemakerAPI paceApi = new PacemakerAPI();;
+    private PacemakerAPI paceApi = new PacemakerAPI("http://localhost:7000");
+    PacemakerAPI pacemaker = new PacemakerAPI("https://pacific-castle-57153.herokuapp.com/");
     private Parser console = new AsciiTableParser();
     private User loggedInUser = null;
 
@@ -77,38 +82,76 @@ public class PacemakerConsoleService {
     // Lab 8 Exercise 1 16/11/17 Todo write test
     @Command(description = "Add location: Append location to an activity")
     public void addLocation(@Param(name = "activity-id") String id,
-                            @Param(name = "longitude") double longitude,
-                            @Param(name = "latitude") double latitude) {
-        Optional<User> user = Optional.fromNullable(loggedInUser);
-        Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(id));
-        if (user.isPresent() && activity.isPresent()) {
-            paceApi.addLocation(activity.get().id, longitude, latitude);
+                            @Param(name = "longitude") double longitude, @Param(name = "latitude") double latitude) {
+        Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(loggedInUser.getId(), id));
+        if (activity.isPresent()) {
+            paceApi.addLocation(loggedInUser.getId(), activity.get().id, latitude, longitude);
             console.println("ok");
         } else {
-            console.println("No active User logged in");
+            console.println("not found");
         }
     }
 
     // Lab 8 Exercise 3 16/11/17
+    /*
     @Command(description = "ActivityReport: List all activities for logged in user, sorted alphabetically by type")
     public void activityReport() {
         Optional<User> user = Optional.fromNullable(loggedInUser);
         if (user.isPresent()) {
             //Collection<Activity> activities = paceApi.getActivities(user.get().id);
+            //Comparator<Activity> byType = (Activity o1, Activity o2)->o1.getType().compareTo(o2.getType());
+            console.renderActivities(paceApi.listActivities());
+        }
+    }
+    */
+
+    @Command(description = "ActivityReport: List all activities for logged in user, sorted alphabetically by type")
+    public void activityReport() {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            console.renderActivities(paceApi.listActivities(user.get().id, "type"));
         }
     }
 
-    @Command(description = "Activity Report: List all activities for logged in user by type. Sorted longest to shortest distance")
-    public void activityReport(@Param(name = "byType: type") String sortBy) {
+    @Command(
+            description = "Activity Report: List all activities for logged in user by type. Sorted longest to shortest distance")
+    public void activityReport(@Param(name = "byType: type") String type) {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            List<Activity> reportActivities = new ArrayList<>();
+            Collection<Activity> usersActivities = paceApi.getActivities(user.get().id);
+            usersActivities.forEach(a -> {
+                if (a.type.equals(type))
+                    reportActivities.add(a);
+            });
+            reportActivities.sort((a1, a2) -> {
+                if (a1.distance >= a2.distance)
+                    return -1;
+                else
+                    return 1;
+            });
+            console.renderActivities(reportActivities);
+        }
     }
 
+
+    /*
+    @Command(description = "Activity Report: List all activities for logged in user by type. Sorted longest to shortest distance")
+    public void activityReport(@Param(name = "byType: type") String sortBy) {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+
+        }
+
+    }
+    */
     // Lab 8 Exercise 2 16/11/17 ToDo write test
     @Command(description = "List all locations for a specific activity")
     public void listActivityLocations(@Param(name = "activity-id") String id) {
-        Optional<User> user = Optional.fromNullable(loggedInUser);
-        Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(id));
-        if (user.isPresent() && activity.isPresent()) {
-            console.renderLocations(activity.get().route);
+
+        Optional<Activity> activity = Optional.fromNullable(paceApi.getActivity(loggedInUser.getId(), id));
+        if (activity.isPresent()) {
+            // console.renderLocations(activity.get().route);
         }
     }
 
