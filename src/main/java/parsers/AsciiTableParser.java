@@ -4,6 +4,7 @@ import com.bethecoder.ascii_table.ASCIITable;
 import com.bethecoder.ascii_table.impl.CollectionASCIITableAware;
 import com.bethecoder.ascii_table.spec.IASCIITableAware;
 import models.Activity;
+import models.FriendList;
 import models.Location;
 import models.User;
 
@@ -68,6 +69,21 @@ public class AsciiTableParser extends Parser {
                 IASCIITableAware asciiTableAware = new CollectionASCIITableAware<Location>(locations,
                         "id",
                         "latitude", "longitude");
+                System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
+            }
+            System.out.println("ok");
+        } else {
+            System.out.println("not found");
+        }
+    }
+
+    //renderFriends
+    public void renderFriends(Collection<FriendList> friends) {
+        if(friends != null) {
+            if (!friends.isEmpty()) {
+                List<FriendList> friendLists = new ArrayList<>(friends);
+                IASCIITableAware asciiTableAware = new CollectionASCIITableAware<FriendList>(friendLists,
+                        "id", "firstname", "lastname", "email", "messages" );
                 System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
             }
             System.out.println("ok");

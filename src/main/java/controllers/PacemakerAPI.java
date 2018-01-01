@@ -3,6 +3,7 @@ package controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import models.Activity;
+import models.FriendList;
 import models.Location;
 import models.User;
 import retrofit2.Call;
@@ -48,6 +49,16 @@ interface PacemakerInterface
 
     @GET("/users/{id}/activities/{activityId}/locations")
     Call<List<Location>> getLocations(@Path("id") String id, @Path("activityId") String activityId);
+
+    //friendlist commands
+    @POST("/users/{id}/friendlist/{email}")
+    Call<FriendList> addFriend(@Path("email") String email);
+
+    @DELETE("/users/{id}/friendlist/{email}")
+    Call<FriendList> unfollowFriend(@Path("email") String email);
+
+    @GET("/users/{id}/friendlist")
+    Call<List<FriendList>> getFriendsList(@Path("email") String email);
 
 }
 
@@ -124,7 +135,7 @@ public class PacemakerAPI {
         return activities;
     }
 
-    public List<Activity> listActivities(String userId, String sortBy) {
+    public Collection<Activity> listActivities(String userId, String sortBy) {
         return null;
     }
 
@@ -203,5 +214,59 @@ public class PacemakerAPI {
         return locations;
     }
 
+    //Friend functionality
+    //Follow friend
+    /*
+    public void addLocation(String id, String activityId, double latitude, double longitude) {
+        try {
+            Call<Location> call = pacemakerInterface.addLocation(id, activityId, new Location(latitude, longitude));
+            call.execute();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    */
+    public void addFriend(String email) {
+        try {
+            Call<FriendList> call = pacemakerInterface.addFriend(email);
+            call.execute();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void unfollowFriend(String email) {
+        try {
+            Call<FriendList> call = pacemakerInterface.unfollowFriend(email);
+            call.execute();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    /*
+    public Collection<Activity> getActivities(String id) {
+        Collection<Activity> activities = null;
+        try {
+            Call<List<Activity>> call = pacemakerInterface.getActivities(id);
+            Response<List<Activity>> response = call.execute();
+            activities = response.body();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return activities;
+    }
+    */
+    //method to get friends list
+    public Collection<FriendList> getFriendsList(String email) {
+        Collection<FriendList> friends = null;
+        try {
+            Call<List<FriendList>> call = pacemakerInterface.getFriendsList(email);
+            Response<List<FriendList>> response = call.execute();
+            friends = response.body();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return friends;
+    }
 }
 

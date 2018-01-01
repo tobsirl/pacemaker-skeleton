@@ -4,6 +4,7 @@ import asg.cliche.Command;
 import asg.cliche.Param;
 import com.google.common.base.Optional;
 import models.Activity;
+import models.FriendList;
 import models.User;
 import parsers.AsciiTableParser;
 import parsers.Parser;
@@ -109,12 +110,11 @@ public class PacemakerConsoleService {
     public void activityReport() {
         Optional<User> user = Optional.fromNullable(loggedInUser);
         if (user.isPresent()) {
-            console.renderActivities(paceApi.listActivities(user.get().id, "type"));
+            console.renderActivities(paceApi.getActivities(user.get().id, "type"));
         }
     }
 
-    @Command(
-            description = "Activity Report: List all activities for logged in user by type. Sorted longest to shortest distance")
+    @Command(description = "Activity Report: List all activities for logged in user by type. Sorted longest to shortest distance")
     public void activityReport(@Param(name = "byType: type") String type) {
         Optional<User> user = Optional.fromNullable(loggedInUser);
         if (user.isPresent()) {
@@ -157,20 +157,55 @@ public class PacemakerConsoleService {
 
     @Command(description = "Follow Friend: Follow a specific friend")
     public void follow(@Param(name = "email") String email) {
+        System.out.println("Follow a friend");
+        Optional<User> user = Optional.fromNullable(paceApi.getUserByEmail(email));
+        if (user.isPresent()) {
+            //List<FriendList> friendLists = new ArrayList<>();
+            paceApi.addFriend(email);
+        }
     }
-
+    /*
+    @Command(description = "List Activities: List all activities for logged in user")
+    public void listActivities() {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            console.renderActivities(paceApi.getActivities(user.get().id));
+        }
+    }
+    */
     @Command(description = "List Friends: List all of the friends of the logged in user")
     public void listFriends() {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            console.renderFriends((List<FriendList>) paceApi.getFriendsList(user.get().email));
+        }
     }
-
+    /*
+    @Command(description = "ActivityReport: List all activities for logged in user, sorted alphabetically by type")
+    public void activityReport() {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            console.renderActivities(paceApi.listActivities(user.get().id, "type"));
+        }
+    }
+    */
     @Command(description = "Friend Activity Report: List all activities of specific friend, sorted alphabetically by type)")
     public void friendActivityReport(@Param(name = "email") String email) {
+        Optional<User> user = Optional.fromNullable(paceApi.getUserByEmail(email));
+        if (user.isPresent()) {
+            console.renderFriends((List<FriendList>) paceApi.getFriendsList(user.get().email)); //add sorting
+        }
     }
 
     // Good Commands
 
     @Command(description = "Unfollow Friends: Stop following a friend")
-    public void unfollowFriend() {
+    public void unfollowFriend(@Param(name = "email") String email) {
+        System.out.println("Unfollow a friend");
+        Optional<User> user = Optional.fromNullable(paceApi.getUserByEmail(email));
+        if (user.isPresent()) {
+            paceApi.unfollowFriend(email);
+        }
     }
 
     @Command(description = "Message Friend: send a message to a friend")

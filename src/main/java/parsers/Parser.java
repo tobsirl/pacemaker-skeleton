@@ -1,6 +1,7 @@
 package parsers;
 
 import models.Activity;
+import models.FriendList;
 import models.Location;
 import models.User;
 
@@ -31,5 +32,10 @@ public class Parser {
 
     public void renderLocations(List<Location> locations) {
         System.out.println(locations.toString());
+    }
+
+    //render friends
+    public void renderFriends(List<FriendList> friendLists) {
+        System.out.println(friendLists.toString());
     }
 }
