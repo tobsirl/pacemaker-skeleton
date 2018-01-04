@@ -28,7 +28,11 @@ public class FriendList extends User {
     public boolean equals(final Object obj) {
         if (obj instanceof FriendList) {
             final FriendList other = (FriendList) obj;
-            return Objects.equal(email, other.email);
+            return Objects.equal(firstname, other.firstname)
+                    && Objects.equal(lastname, other.lastname)
+                    && Objects.equal(email, other.email)
+                    && Objects.equal(password, other.password)
+                    && Objects.equal(messages, other.messages);
         } else {
             return false;
         }
@@ -36,6 +40,6 @@ public class FriendList extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.email);
+        return Objects.hashCode(this.id, this.lastname, this.firstname, this.email, this.password, this.messages);
     }
 }

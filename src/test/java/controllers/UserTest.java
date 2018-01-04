@@ -39,4 +39,10 @@ public class UserTest {
         Collection<User> returnedUsers = pacemaker.getUsers();
         assertEquals(users.size(), returnedUsers.size());
     }
+
+    @Test
+    public void testToString() {
+        assertEquals("User{" + homer.id + ", homer, simpson, secret, homer@simpson.com}",
+                homer.toString());
+    }
 }

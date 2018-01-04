@@ -2,10 +2,7 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import models.Activity;
-import models.FriendList;
-import models.Location;
-import models.User;
+import models.*;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -41,6 +38,7 @@ interface PacemakerInterface
     @DELETE("/users/{id}")
     Call<User> deleteUser(@Path("id") String id);
 
+    //
     @GET("/users/{id}")
     Call<User> getUser(@Path("id") String id);
 
@@ -57,8 +55,19 @@ interface PacemakerInterface
     @DELETE("/users/{id}/friendlist/{email}")
     Call<FriendList> unfollowFriend(@Path("email") String email);
 
-    @GET("/users/{id}/friendlist")
+    @GET("/users/{id}/friendlist/{email}")
     Call<List<FriendList>> getFriendsList(@Path("email") String email);
+
+    //messages
+    @GET("/users/{id}/activities")
+    Call<List<Message>> getMessages(@Path("id") String id);
+
+    //@GET("/users/{id}/messages/")
+    //Call<List<FriendList>> listMessages(@Path("id") String id);
+
+    //Send a message to a friend
+    @POST("/users/{id}/friendlist/{email}/message")
+    Call<Message> messageFriend(@Path("email") String email, @Path("message") String message);
 
 }
 
@@ -134,9 +143,43 @@ public class PacemakerAPI {
         }
         return activities;
     }
-
+    /*
+    public List<Activity> listActivities(String userId, String sortBy) {
+    List<Activity> activities = new ArrayList<>();
+    activities.addAll(userIndex.get(userId).activities.values());
+    switch (sortBy) {
+      case "type":
+        activities.sort((a1, a2) -> a1.type.compareTo(a2.type));
+        break;
+      case "location":
+        activities.sort((a1, a2) -> a1.location.compareTo(a2.location));
+        break;
+      case "distance":
+        activities.sort((a1, a2) -> Double.compare(a1.distance, a2.distance));
+        break;
+    }
+    return activities;
+  }
+     */
     public Collection<Activity> listActivities(String userId, String sortBy) {
-        return null;
+        Collection<Activity> activities = null;
+        activities.addAll((Collection<? extends Activity>) pacemakerInterface.getActivities(userId));
+        try {
+            switch (sortBy) { //fix sorting
+                case "type":
+                    //activities.sort((a1, a2) -> a1.type.)
+                    break;
+                case "location":
+                    //activities.
+                    break;
+                case "distance":
+                    //activities.
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return activities;
     }
 
     public void addLocation(String id, String activityId, double latitude, double longitude) {
@@ -229,7 +272,8 @@ public class PacemakerAPI {
     public void addFriend(String email) {
         try {
             Call<FriendList> call = pacemakerInterface.addFriend(email);
-            call.execute();
+            Response<FriendList> response = call.execute();
+            response.body();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -238,7 +282,8 @@ public class PacemakerAPI {
     public void unfollowFriend(String email) {
         try {
             Call<FriendList> call = pacemakerInterface.unfollowFriend(email);
-            call.execute();
+            Response<FriendList> response = call.execute();
+            response.body();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -267,6 +312,29 @@ public class PacemakerAPI {
             System.out.println(e.getMessage());
         }
         return friends;
+    }
+
+    //get messages
+    public Collection<Message> getMessages(String email) {
+        Collection<Message> messages = null;
+        try {
+            Call<List<Message>> call = pacemakerInterface.getMessages(email);
+            Response<List<Message>> response = call.execute();
+            messages = response.body();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return messages;
+    }
+
+    //message a friend
+    public void messageFriend(String email, String message) {
+        try {
+            Call<Message> call = pacemakerInterface.messageFriend(email, message);
+            call.execute();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
 

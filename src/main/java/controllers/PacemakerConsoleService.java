@@ -5,6 +5,7 @@ import asg.cliche.Param;
 import com.google.common.base.Optional;
 import models.Activity;
 import models.FriendList;
+import models.Message;
 import models.User;
 import parsers.AsciiTableParser;
 import parsers.Parser;
@@ -106,11 +107,13 @@ public class PacemakerConsoleService {
     }
     */
 
-    @Command(description = "ActivityReport: List all activities for logged in user, sorted alphabetically by type")
+
+    @Command(
+            description = "ActivityReport: List all activities for logged in user, sorted alphabetically by type")
     public void activityReport() {
         Optional<User> user = Optional.fromNullable(loggedInUser);
         if (user.isPresent()) {
-            console.renderActivities(paceApi.getActivities(user.get().id, "type"));
+            console.renderActivities(paceApi.listActivities(user.get().id, "type"));
         }
     }
 
@@ -211,10 +214,27 @@ public class PacemakerConsoleService {
     @Command(description = "Message Friend: send a message to a friend")
     public void messageFriend(@Param(name = "email") String email,
                               @Param(name = "message") String message) {
+        Optional<User> user = Optional.fromNullable(paceApi.getUserByEmail(email));
+        if (user.isPresent()) {
+            paceApi.messageFriend(email, message);
+        }
     }
 
+    /*
+    @Command(description = "List Activities: List all activities for logged in user")
+    public void listActivities() {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            console.renderActivities(paceApi.getActivities(user.get().id));
+        }
+    }
+     */
     @Command(description = "List Messages: List all messages for the logged in user")
     public void listMessages() {
+        Optional<User> user = Optional.fromNullable(loggedInUser);
+        if (user.isPresent()) {
+            console.renderMessages((List<Message>) paceApi.getMessages(user.get().id));
+        }
     }
 
     @Command(description = "Distance Leader Board: list summary distances of all friends, sorted longest to shortest")
