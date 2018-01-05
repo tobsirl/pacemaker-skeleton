@@ -41,6 +41,25 @@ public class UserTest {
     }
 
     @Test
+    public User testGetUserByEmail(String email) {
+        return User;
+    }
+
+    @Test
+    public User testGetUser(String id) {
+        return User;
+    }
+
+    @Test
+    public void testDeleteUsers() {
+
+    }
+    @Test
+    public User testDeleteUser(String id) {
+        return User;
+    }
+
+    @Test
     public void testToString() {
         assertEquals("User{" + homer.id + ", homer, simpson, secret, homer@simpson.com}",
                 homer.toString());

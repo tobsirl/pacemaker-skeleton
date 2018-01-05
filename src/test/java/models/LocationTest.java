@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static models.Fixtures.locations;
 
 public class LocationTest {
 
@@ -33,10 +34,12 @@ public class LocationTest {
     }
 
     @Test
-    public void toString() {
+    public void testToString() {
+        assertEquals("Location{" + locations.get(0).id + ", 23.3, 33.3}", locations.get(0).toString());
     }
-
+    /*
     @Test
     public void hashCode() {
     }
+    */
 }

@@ -32,12 +32,17 @@ public class Parser {
     }
 
     //render friends
-    public void renderFriends(List<FriendList> friendLists) {
+    public void renderFriends(Collection<FriendList> friendLists) {
         System.out.println(friendLists.toString());
     }
 
     //render messages
-    public  void renderMessages(List<Message> messages) {
+    public void renderMessages(Collection<Message> messages) {
         System.out.println(messages.toString());
+    }
+
+    //render Distance Leader Board
+    public void renderDistanceLeaderBoards(Collection<DistanceLeaderBoard> distanceLeaderBoards) {
+        System.out.println(distanceLeaderBoards.toString());
     }
 }

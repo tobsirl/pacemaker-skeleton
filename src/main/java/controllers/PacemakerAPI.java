@@ -59,8 +59,8 @@ interface PacemakerInterface
     Call<List<FriendList>> getFriendsList(@Path("email") String email);
 
     //messages
-    @GET("/users/{id}/activities")
-    Call<List<Message>> getMessages(@Path("id") String id);
+    @GET("/users/{id}/friendlist/{email}/message")
+    Call<List<Message>> getMessages(@Path("id") String email);
 
     //@GET("/users/{id}/messages/")
     //Call<List<FriendList>> listMessages(@Path("id") String id);
@@ -314,6 +314,7 @@ public class PacemakerAPI {
         return friends;
     }
 
+    //message commands
     //get messages
     public Collection<Message> getMessages(String email) {
         Collection<Message> messages = null;
@@ -336,5 +337,7 @@ public class PacemakerAPI {
             System.out.println(e.getMessage());
         }
     }
+
+    //Activity reports
 }
 

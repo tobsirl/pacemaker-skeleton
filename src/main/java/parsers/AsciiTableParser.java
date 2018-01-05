@@ -103,4 +103,18 @@ public class AsciiTableParser extends Parser {
             System.out.println("not found");
         }
     }
+
+    //render Distance Leader Boards
+    public void renderDistanceLeaderBoards(Collection<DistanceLeaderBoard> distanceLeaderBoards) {
+        if (distanceLeaderBoards != null) {
+            if (!distanceLeaderBoards.isEmpty()) {
+                List<DistanceLeaderBoard> distanceLeaderBoardList = new ArrayList<>(distanceLeaderBoards);
+                IASCIITableAware asciiTableAware = new CollectionASCIITableAware<DistanceLeaderBoard>(distanceLeaderBoardList, "name", "distance");
+                System.out.println(ASCIITable.getInstance().getTable(asciiTableAware));
+            }
+            System.out.println("ok");
+        } else {
+            System.out.println("not found");
+        }
+    }
 }

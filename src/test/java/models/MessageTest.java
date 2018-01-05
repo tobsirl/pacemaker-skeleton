@@ -4,8 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class MessageTest {
 
     @Before
@@ -23,7 +21,7 @@ public class MessageTest {
     @Test
     public void equals() {
     }
-
+    /*
     @Test
     public void toString() {
     }
@@ -31,4 +29,5 @@ public class MessageTest {
     @Test
     public void hashCode() {
     }
+    */
 }

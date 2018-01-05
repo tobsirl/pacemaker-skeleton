@@ -4,8 +4,6 @@ import asg.cliche.Command;
 import asg.cliche.Param;
 import com.google.common.base.Optional;
 import models.Activity;
-import models.FriendList;
-import models.Message;
 import models.User;
 import parsers.AsciiTableParser;
 import parsers.Parser;
@@ -180,7 +178,7 @@ public class PacemakerConsoleService {
     public void listFriends() {
         Optional<User> user = Optional.fromNullable(loggedInUser);
         if (user.isPresent()) {
-            console.renderFriends((List<FriendList>) paceApi.getFriendsList(user.get().email));
+            console.renderFriends (paceApi.getFriendsList(user.get().email));
         }
     }
     /*
@@ -193,10 +191,23 @@ public class PacemakerConsoleService {
     }
     */
     @Command(description = "Friend Activity Report: List all activities of specific friend, sorted alphabetically by type)")
-    public void friendActivityReport(@Param(name = "email") String email) {
+    public void friendActivityReport(@Param(name = "email") String email, @Param(name = "byType: type") String type) {
         Optional<User> user = Optional.fromNullable(paceApi.getUserByEmail(email));
         if (user.isPresent()) {
-            console.renderFriends((List<FriendList>) paceApi.getFriendsList(user.get().email)); //add sorting
+            //console.renderFriends(paceApi.getFriendsList(user.get().email)); //add sorting
+            List<Activity> reportActivities = new ArrayList<>();
+            Collection<Activity> usersActivities = paceApi.getActivities(user.get().email);
+            usersActivities.forEach(a -> {
+                if (a.type.equals(type))
+                    reportActivities.add(a);
+            });
+            reportActivities.sort((a1, a2) -> {
+                if (a1.type.equals(a2.type))
+                    return -1;
+                else
+                    return 1;
+            });
+            console.renderActivities(reportActivities);
         }
     }
 
@@ -233,7 +244,7 @@ public class PacemakerConsoleService {
     public void listMessages() {
         Optional<User> user = Optional.fromNullable(loggedInUser);
         if (user.isPresent()) {
-            console.renderMessages((List<Message>) paceApi.getMessages(user.get().id));
+            console.renderMessages(paceApi.getMessages(user.get().id));
         }
     }
 
