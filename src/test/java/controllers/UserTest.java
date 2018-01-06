@@ -39,7 +39,7 @@ public class UserTest {
         Collection<User> returnedUsers = pacemaker.getUsers();
         assertEquals(users.size(), returnedUsers.size());
     }
-
+    /*
     @Test
     public User testGetUserByEmail(String email) {
         return User;
@@ -58,7 +58,7 @@ public class UserTest {
     public User testDeleteUser(String id) {
         return User;
     }
-
+    */
     @Test
     public void testToString() {
         assertEquals("User{" + homer.id + ", homer, simpson, secret, homer@simpson.com}",

@@ -37,4 +37,9 @@ public class AsciiTableParserTest {
     @Test
     public void renderMessages() {
     }
+
+    @Test
+    public void renderDistanceLeaderBoards(){
+
+    }
 }

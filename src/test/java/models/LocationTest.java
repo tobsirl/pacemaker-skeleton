@@ -18,6 +18,12 @@ public class LocationTest {
     }
 
     @Test
+    public void testCreate() {
+        assertEquals(0.01, 23.3, locations.get(0).latitude);
+        assertEquals(0.01, 33.3, locations.get(0).longitude);
+    }
+
+    @Test
     public void getId() {
     }
 

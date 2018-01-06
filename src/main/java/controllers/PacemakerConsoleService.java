@@ -4,6 +4,7 @@ import asg.cliche.Command;
 import asg.cliche.Param;
 import com.google.common.base.Optional;
 import models.Activity;
+import models.FriendList;
 import models.User;
 import parsers.AsciiTableParser;
 import parsers.Parser;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public class PacemakerConsoleService {
 
-    private PacemakerAPI paceApi = new PacemakerAPI("http://localhost:7000");
-    PacemakerAPI pacemaker = new PacemakerAPI("https://pacific-castle-57153.herokuapp.com/");
+    private PacemakerAPI paceApi = new PacemakerAPI("https://gentle-thicket-54430.herokuapp.com/");
+    private PacemakerAPI pacemaker = new PacemakerAPI("https://gentle-thicket-54430.herokuapp.com/");
     private Parser console = new AsciiTableParser();
     private User loggedInUser = null;
 
@@ -250,7 +251,14 @@ public class PacemakerConsoleService {
 
     @Command(description = "Distance Leader Board: list summary distances of all friends, sorted longest to shortest")
     public void distanceLeaderBoard() {
+        Optional<Collection<FriendList>> friendList = Optional.fromNullable(paceApi.getFriendsList());
+        if (friendList.isPresent()) {
+            List<FriendList> reportDistanceLB = new ArrayList<>();
+            //Collection<FriendList> friendsDistance = paceApi.getFriendsList
+        }
     }
+
+
 
     // Excellent Commands
 

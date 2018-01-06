@@ -15,7 +15,7 @@ import java.util.List;
 interface PacemakerInterface
 {
     @GET("/users")
-    Call<List<User>> getUsers();
+    Call<FriendList> getUsers();
 
     @POST("/users")
     Call<User> registerUser(@Body User User);
@@ -31,6 +31,14 @@ interface PacemakerInterface
 
     @POST("/users/{id}/activities/{activityId}/locations")
     Call<Location> addLocation(@Path("id") String id, @Path("activityId") String activityId, @Body Location location);
+
+    //Activity Reports
+    @GET("/users/{id}/activities{{activityId}/activityreport")
+    Call<Activity> activityReport();
+
+    @GET("/users/{id}/activities{{activityId}/activityreport/{type}")
+    Call<Activity> activityReport(@Path("type") String type);
+
 
     @DELETE("/users")
     Call<User> deleteUsers();
@@ -69,6 +77,8 @@ interface PacemakerInterface
     @POST("/users/{id}/friendlist/{email}/message")
     Call<Message> messageFriend(@Path("email") String email, @Path("message") String message);
 
+    //@GET("/users/{id}/")
+
 }
 
 
@@ -86,9 +96,9 @@ public class PacemakerAPI {
     public Collection<User> getUsers() {
         Collection<User> users = null;
         try {
-            Call<List<User>> call = pacemakerInterface.getUsers();
-            Response<List<User>> response = call.execute();
-            users = response.body();
+            Call<FriendList> call = pacemakerInterface.getUsers();
+            Response<FriendList> response = call.execute();
+            users = (Collection<User>) response.body();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -143,24 +153,7 @@ public class PacemakerAPI {
         }
         return activities;
     }
-    /*
-    public List<Activity> listActivities(String userId, String sortBy) {
-    List<Activity> activities = new ArrayList<>();
-    activities.addAll(userIndex.get(userId).activities.values());
-    switch (sortBy) {
-      case "type":
-        activities.sort((a1, a2) -> a1.type.compareTo(a2.type));
-        break;
-      case "location":
-        activities.sort((a1, a2) -> a1.location.compareTo(a2.location));
-        break;
-      case "distance":
-        activities.sort((a1, a2) -> Double.compare(a1.distance, a2.distance));
-        break;
-    }
-    return activities;
-  }
-     */
+
     public Collection<Activity> listActivities(String userId, String sortBy) {
         Collection<Activity> activities = null;
         activities.addAll((Collection<? extends Activity>) pacemakerInterface.getActivities(userId));
@@ -259,16 +252,7 @@ public class PacemakerAPI {
 
     //Friend functionality
     //Follow friend
-    /*
-    public void addLocation(String id, String activityId, double latitude, double longitude) {
-        try {
-            Call<Location> call = pacemakerInterface.addLocation(id, activityId, new Location(latitude, longitude));
-            call.execute();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-    */
+
     public void addFriend(String email) {
         try {
             Call<FriendList> call = pacemakerInterface.addFriend(email);
@@ -288,19 +272,20 @@ public class PacemakerAPI {
             System.out.println(e.getMessage());
         }
     }
-    /*
-    public Collection<Activity> getActivities(String id) {
-        Collection<Activity> activities = null;
+
+
+    public Collection<FriendList> getFriendsList() {
+        Collection<FriendList> friendLists = null;
         try {
-            Call<List<Activity>> call = pacemakerInterface.getActivities(id);
-            Response<List<Activity>> response = call.execute();
-            activities = response.body();
+            Call<FriendList> call = pacemakerInterface.getUsers();
+            Response<FriendList> response = call.execute();
+            friendLists = (Collection<FriendList>) response.body();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return activities;
+        return friendLists;
     }
-    */
+
     //method to get friends list
     public Collection<FriendList> getFriendsList(String email) {
         Collection<FriendList> friends = null;
